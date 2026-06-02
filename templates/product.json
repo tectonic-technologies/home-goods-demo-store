@@ -691,10 +691,78 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "marlow_modules": {
+      "type": "section",
+      "blocks": {
+        "mpg": {
+          "type": "marlow-product-groups",
+          "settings": {
+            "show_heading": true,
+            "heading": "Options",
+            "fallback_to_variants": true
+          },
+          "blocks": {}
+        },
+        "maplus": {
+          "type": "marlow-aplus",
+          "settings": {
+            "heading": "The detail"
+          },
+          "blocks": {}
+        },
+        "mrev": {
+          "type": "marlow-reviews",
+          "settings": {
+            "heading": "Reviews",
+            "show_distribution": true,
+            "show_themes": true,
+            "max_reviews": 6
+          },
+          "blocks": {}
+        },
+        "mfaq": {
+          "type": "marlow-faq",
+          "settings": {
+            "heading": "Questions",
+            "open_first": false,
+            "show_categories": false
+          },
+          "blocks": {}
+        },
+        "mfbt": {
+          "type": "marlow-fbt",
+          "settings": {
+            "heading": "Pairs well with",
+            "show_bulk_add": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "mpg",
+        "maplus",
+        "mrev",
+        "mfaq",
+        "mfbt"
+      ],
+      "name": "MARLOW \u00b7 PDP modules",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "flex-start",
+        "gap": 40,
+        "section_width": "page-width",
+        "color_scheme": "",
+        "padding-block-start": 24,
+        "padding-block-end": 48
+      }
     }
   },
   "order": [
     "main",
+    "marlow_modules",
     "product_recommendations_xmXAhw",
     "media_with_content_9rDKpN"
   ]

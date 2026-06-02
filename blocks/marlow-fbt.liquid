@@ -1,0 +1,133 @@
+{%- comment -%}
+  MARLOW · Frequently Bought Together (PDP Kit)
+  Reads product.metafields.merch.fbt.
+  Task spec: a json list of product HANDLES. schema.md notes the field may instead
+  be a json object {strategy, product_gids[]}. This block handles both shapes:
+    - if fbt is an array, treat entries as handles (or {handle} objects),
+    - if fbt is an object with .product_handles or .handles, use those.
+  Each handle is resolved via all_products[handle]; unresolved handles are skipped.
+  Renders nothing if no companions resolve.
+{%- endcomment -%}
+
+{%- assign s = block.settings -%}
+{%- assign fbt = product.metafields.merch.fbt.value -%}
+
+{%- comment -%} Normalise to a list of handle strings. {%- endcomment -%}
+{%- assign handles = '' -%}
+{%- if fbt != blank -%}
+  {%- if fbt.product_handles != blank -%}
+    {%- assign handle_list = fbt.product_handles -%}
+  {%- elsif fbt.handles != blank -%}
+    {%- assign handle_list = fbt.handles -%}
+  {%- else -%}
+    {%- assign handle_list = fbt -%}
+  {%- endif -%}
+
+  {%- for entry in handle_list -%}
+    {%- assign h = '' -%}
+    {%- if entry.handle != blank -%}
+      {%- assign h = entry.handle -%}
+    {%- else -%}
+      {%- assign h = entry -%}
+    {%- endif -%}
+    {%- if h != blank -%}
+      {%- assign handles = handles | append: h | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- comment -%} Resolve handles to available products. {%- endcomment -%}
+{%- assign resolved = '' -%}
+{%- if handles != blank -%}
+  {%- assign handle_arr = handles | split: ',' -%}
+  {%- for h in handle_arr -%}
+    {%- assign cand = all_products[h] -%}
+    {%- if cand != blank and cand.handle != product.handle and cand.available -%}
+      {%- assign resolved = resolved | append: h | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if resolved != blank -%}
+  {%- assign resolved_arr = resolved | split: ',' -%}
+  <section class="marlow-fbt" {{ block.shopify_attributes }}>
+    {%- if s.heading != blank -%}
+      <h2 class="marlow-fbt__heading">{{ s.heading }}</h2>
+    {%- endif -%}
+
+    <form method="post" action="/cart/add" class="marlow-fbt__form" enctype="multipart/form-data">
+      <ul class="marlow-fbt__row" role="list">
+        {%- comment -%} Include the current product as the anchor of the set. {%- endcomment -%}
+        <li class="marlow-fbt__card is-anchor">
+          {%- if product.featured_image -%}
+            <a class="marlow-fbt__media" href="{{ product.url }}">
+              <img src="{{ product.featured_image | image_url: width: 240 }}" alt="{{ product.featured_image.alt | escape }}" width="120" height="120" loading="lazy">
+            </a>
+          {%- endif -%}
+          <p class="marlow-fbt__title">{{ product.title }}</p>
+          <p class="marlow-fbt__price">{{ product.price | money }}</p>
+          <p class="marlow-fbt__this">This item</p>
+        </li>
+
+        {%- for h in resolved_arr -%}
+          {%- assign p = all_products[h] -%}
+          {%- assign v = p.selected_or_first_available_variant -%}
+          <li class="marlow-fbt__card">
+            <span class="marlow-fbt__plus" aria-hidden="true">+</span>
+            {%- if p.featured_image -%}
+              <a class="marlow-fbt__media" href="{{ p.url }}">
+                <img src="{{ p.featured_image | image_url: width: 240 }}" alt="{{ p.featured_image.alt | escape }}" width="120" height="120" loading="lazy">
+              </a>
+            {%- endif -%}
+            <a class="marlow-fbt__title" href="{{ p.url }}">{{ p.title }}</a>
+            <p class="marlow-fbt__price">{{ p.price | money }}</p>
+            {%- if v != blank and v.available -%}
+              <label class="marlow-fbt__check">
+                <input type="checkbox" name="items[][id]" value="{{ v.id }}" checked>
+                <span>Add</span>
+              </label>
+            {%- else -%}
+              <p class="marlow-fbt__soldout">Sold out</p>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if s.show_bulk_add -%}
+        <button type="submit" class="marlow-fbt__bulk button">Add selected to cart</button>
+      {%- endif -%}
+    </form>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .marlow-fbt { margin-block: var(--margin-lg, 32px); color: var(--color-foreground, #2b2622); }
+  .marlow-fbt__heading { font-size: 1.4rem; font-weight: 500; letter-spacing: 0.01em; margin: 0 0 var(--margin-md, 18px); }
+  .marlow-fbt__row { list-style: none; margin: 0 0 var(--margin-md, 18px); padding: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--margin-md, 18px); }
+  .marlow-fbt__card { position: relative; flex: 0 1 150px; display: flex; flex-direction: column; gap: 4px; }
+  .marlow-fbt__plus { position: absolute; inset-inline-start: calc(var(--margin-md, 18px) / -2); inset-block-start: 48px; transform: translateX(-50%); font-size: 1.1rem; opacity: 0.4; }
+  .marlow-fbt__media { display: block; }
+  .marlow-fbt__media img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 4px; background: color-mix(in srgb, currentColor 5%, transparent); }
+  .marlow-fbt__title { margin: 6px 0 0; font-size: 0.85rem; line-height: 1.35; text-decoration: none; color: inherit; }
+  a.marlow-fbt__title:hover { text-decoration: underline; }
+  .marlow-fbt__price { margin: 0; font-size: 0.85rem; opacity: 0.75; font-variant-numeric: tabular-nums; }
+  .marlow-fbt__this { margin: 0; font-size: 0.72rem; text-transform: lowercase; letter-spacing: 0.04em; opacity: 0.5; }
+  .marlow-fbt__check { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; margin-block-start: 2px; }
+  .marlow-fbt__soldout { margin: 2px 0 0; font-size: 0.78rem; opacity: 0.5; }
+  .marlow-fbt__bulk { font-size: 0.85rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "MARLOW · Bought together",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "Frequently bought together. Reads the merch.fbt metafield (list of product handles) from the MARLOW data pipeline. Skips handles that do not resolve and renders nothing when none are available." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pairs well with" },
+    { "type": "checkbox", "id": "show_bulk_add", "label": "Show 'add selected to cart' button", "default": true }
+  ],
+  "presets": [
+    { "name": "MARLOW · Bought together" }
+  ]
+}
+{% endschema %}
