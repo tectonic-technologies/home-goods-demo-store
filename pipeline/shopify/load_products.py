@@ -32,6 +32,15 @@ def mf(ns, key, typ, val):
     else: v = str(val)
     return {"namespace": ns, "key": key, "type": typ, "value": v}
 
+def clean_price(raw, fallback):
+    """A variant price of '0.00'/'0'/None is unusable; fall back to the metric price."""
+    if raw in (None, "", "0", "0.0", "0.00", 0, 0.0):
+        return fallback
+    try:
+        return raw if float(raw) > 0 else fallback
+    except (TypeError, ValueError):
+        return fallback
+
 def build_input(p):
     h = p["src_handle"]; dt = p["display_title"]
     c = DESC.get(h, {}); e = ENR.get(h, {}); m = MET.get(dt, {}); r = REV.get(dt, {})
@@ -72,7 +81,7 @@ def build_input(p):
         inp["productOptions"] = [{"name": o["name"], "values": [{"name": x} for x in opt_vals[o["name"]]]} for o in real_opts]
         inp["variants"] = [{
             "optionValues": ovals,
-            "price": v.get("price") or price0,
+            "price": clean_price(v.get("price"), price0),
             "inventoryPolicy": "CONTINUE",
             "inventoryItem": {"sku": v.get("sku") or "", "tracked": False},
         } for v, ovals in valid]
