@@ -38,7 +38,8 @@ python3 pipeline/crawl/content.py      # MARLOW-voice copy, FAQs, room sets, gro
 
 # load (needs creds in pipeline/shopify/secrets.env) — run from pipeline/shopify/
 python3 verify.py
-python3 load_products.py               # idempotent; re-run to fill gaps; then publish
+python3 load_products.py               # idempotent; re-run to fill gaps
+python3 publish_products.py            # publish all to Online Store (else invisible)
 python3 load_collections.py
 python3 set_content_metafields.py      # reviews.items + content.faqs + content.aplus
 python3 load_metaobjects.py            # product_group families -> merch.product_group
