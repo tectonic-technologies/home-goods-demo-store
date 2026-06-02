@@ -1,0 +1,34 @@
+CURATED CATALOG REPORT
+count: 1130
+
+by category:
+   83 Bedding
+   83 Bath
+   83 Table Linens
+   82 Pillows & Cushions
+   82 Throws & Blankets
+   77 Kitchen Linens
+   69 Candles & Scent
+   66 Dinnerware
+   61 Rugs & Mats
+   57 Flatware
+   54 Decor & Objects
+   54 Storage & Baskets
+   53 Serveware
+   53 Glassware
+   53 Vases & Planters
+   49 Lighting
+   46 Bakeware
+   25 Other
+
+by source brand:
+  270 hawkins
+  260 leif
+  220 coyuchi
+  170 farmhouse
+  140 parachute
+   70 piglet
+
+products with variant axis (>1): 812
+total variants: 4585
+total images: 7274

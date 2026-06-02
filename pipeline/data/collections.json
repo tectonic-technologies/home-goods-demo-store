@@ -1,0 +1,331 @@
+[
+ {
+  "handle": "cat-bakeware",
+  "title": "Bakeware",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Bakeware"
+  }
+ },
+ {
+  "handle": "cat-bath",
+  "title": "Bath",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Bath"
+  }
+ },
+ {
+  "handle": "cat-bedding",
+  "title": "Bedding",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Bedding"
+  }
+ },
+ {
+  "handle": "cat-candles-scent",
+  "title": "Candles & Scent",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Candles & Scent"
+  }
+ },
+ {
+  "handle": "cat-decor-objects",
+  "title": "Decor & Objects",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Decor & Objects"
+  }
+ },
+ {
+  "handle": "cat-dinnerware",
+  "title": "Dinnerware",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Dinnerware"
+  }
+ },
+ {
+  "handle": "cat-flatware",
+  "title": "Flatware",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Flatware"
+  }
+ },
+ {
+  "handle": "cat-glassware",
+  "title": "Glassware",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Glassware"
+  }
+ },
+ {
+  "handle": "cat-kitchen-linens",
+  "title": "Kitchen Linens",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Kitchen Linens"
+  }
+ },
+ {
+  "handle": "cat-lighting",
+  "title": "Lighting",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Lighting"
+  }
+ },
+ {
+  "handle": "cat-other",
+  "title": "Other",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Other"
+  }
+ },
+ {
+  "handle": "cat-pillows-cushions",
+  "title": "Pillows & Cushions",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Pillows & Cushions"
+  }
+ },
+ {
+  "handle": "cat-rugs-mats",
+  "title": "Rugs & Mats",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Rugs & Mats"
+  }
+ },
+ {
+  "handle": "cat-serveware",
+  "title": "Serveware",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Serveware"
+  }
+ },
+ {
+  "handle": "cat-storage-baskets",
+  "title": "Storage & Baskets",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Storage & Baskets"
+  }
+ },
+ {
+  "handle": "cat-table-linens",
+  "title": "Table Linens",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Table Linens"
+  }
+ },
+ {
+  "handle": "cat-throws-blankets",
+  "title": "Throws & Blankets",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Throws & Blankets"
+  }
+ },
+ {
+  "handle": "cat-vases-planters",
+  "title": "Vases & Planters",
+  "type": "smart",
+  "rule": {
+   "field": "category",
+   "value": "Vases & Planters"
+  }
+ },
+ {
+  "handle": "room-dining",
+  "title": "The Dining Room",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "dining"
+  }
+ },
+ {
+  "handle": "room-kitchen",
+  "title": "The Kitchen",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "kitchen"
+  }
+ },
+ {
+  "handle": "room-bedroom",
+  "title": "The Bedroom Room",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "bedroom"
+  }
+ },
+ {
+  "handle": "room-bath",
+  "title": "The Bath",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "bath"
+  }
+ },
+ {
+  "handle": "room-living",
+  "title": "The Living Room",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "living"
+  }
+ },
+ {
+  "handle": "room-entryway",
+  "title": "The Entryway Room",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "entryway"
+  }
+ },
+ {
+  "handle": "material-cotton",
+  "title": "Cotton",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "cotton"
+  }
+ },
+ {
+  "handle": "material-linen",
+  "title": "Linen",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "linen"
+  }
+ },
+ {
+  "handle": "material-ceramic",
+  "title": "Ceramic",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "ceramic"
+  }
+ },
+ {
+  "handle": "material-stoneware",
+  "title": "Stoneware",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "stoneware"
+  }
+ },
+ {
+  "handle": "material-glass",
+  "title": "Glass",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "glass"
+  }
+ },
+ {
+  "handle": "material-metal",
+  "title": "Metal",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "metal"
+  }
+ },
+ {
+  "handle": "material-wood",
+  "title": "Wood",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "wood"
+  }
+ },
+ {
+  "handle": "material-wool",
+  "title": "Wool",
+  "type": "smart",
+  "rule": {
+   "field": "material",
+   "value": "wool"
+  }
+ },
+ {
+  "handle": "best-sellers",
+  "title": "Best Sellers",
+  "type": "manual",
+  "rule": {
+   "field": "best_seller"
+  }
+ },
+ {
+  "handle": "new",
+  "title": "New Arrivals",
+  "type": "manual",
+  "rule": {
+   "field": "is_new"
+  }
+ },
+ {
+  "handle": "last-chance",
+  "title": "Last Chance",
+  "type": "manual",
+  "rule": {
+   "field": "is_clearance"
+  }
+ },
+ {
+  "handle": "the-edit",
+  "title": "The Edit",
+  "type": "manual",
+  "rule": {
+   "field": "editorial"
+  }
+ },
+ {
+  "handle": "the-tabletop",
+  "title": "The Tabletop",
+  "type": "smart",
+  "rule": {
+   "field": "room",
+   "value": "dining"
+  }
+ }
+]

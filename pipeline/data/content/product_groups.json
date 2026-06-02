@@ -1,0 +1,134 @@
+[
+ {
+  "name": "The Dinnerware Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "petite-bowl",
+    "label": "Petite Bowl"
+   },
+   {
+    "product": "dinner-plate-classic-collection",
+    "label": "Dinner Plate"
+   },
+   {
+    "product": "lunch-plate-classic-collection",
+    "label": "Lunch Plate"
+   },
+   {
+    "product": "silo-bowl-second",
+    "label": "Silo Bowl"
+   }
+  ]
+ },
+ {
+  "name": "The Glassware Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "farmers-glasses",
+    "label": "Farmer's Glasses"
+   },
+   {
+    "product": "windsor-candlelight",
+    "label": "Windsor Candlelight Tumbler"
+   },
+   {
+    "product": "essex-barware-onyx-1",
+    "label": "Essex Barware - Brushed Onyx Tumbler"
+   },
+   {
+    "product": "silo-glassware-set-of-6",
+    "label": "Silo Glassware - Set Of 6 Tumbler"
+   }
+  ]
+ },
+ {
+  "name": "The Bedding Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "organic-soft-stitch-sham-set-1",
+    "label": "Organic Soft Stitch Sham Set"
+   },
+   {
+    "product": "avila-organic-matelasse-sham-safww1uri7-renewed",
+    "label": "Avila Organic Matelasse Sham"
+   },
+   {
+    "product": "noe-organic-duvet-cover-s44ypqnbcp-renewed",
+    "label": "Noe Organic Duvet Cover"
+   },
+   {
+    "product": "manzanita-organic-handstitched-sham-gupnhgoq-8-renewed",
+    "label": "Manzanita Organic Handstitched Sham"
+   }
+  ]
+ },
+ {
+  "name": "The Bath Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "organic-gauze-terry-towels-natural-with-cream",
+    "label": "Organic Gauze Terry Towels (Natural With Cream)"
+   },
+   {
+    "product": "organic-gauze-terry-towels-moss-with-cream",
+    "label": "Organic Gauze Terry Towels (Moss With Cream)"
+   },
+   {
+    "product": "soft-rib-towels-adobe",
+    "label": "Soft Rib Towels (Adobe)"
+   },
+   {
+    "product": "organic-resort-stripe-towels-bone-with-white",
+    "label": "Organic Resort Stripe Towels (Bone With White)"
+   }
+  ]
+ },
+ {
+  "name": "The Vases & Planters Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "pickle-pot-second",
+    "label": "Pickle Pot"
+   },
+   {
+    "product": "scalloped-terracotta-garden-pot-and-saucer-grey",
+    "label": "Scalloped Terracotta Garden Pot And Saucer - Grey"
+   },
+   {
+    "product": "laurel-crock",
+    "label": "Laurel Crocks Vase"
+   },
+   {
+    "product": "scalloped-terracotta-garden-pot-and-saucer",
+    "label": "Scalloped Terracotta Garden Pot And Saucer"
+   }
+  ]
+ },
+ {
+  "name": "The Table Linens Family",
+  "axis": "material/color",
+  "members": [
+   {
+    "product": "sonoma-textured-organic-napkins-renewed-1",
+    "label": "Sonoma Textured Organic Napkins"
+   },
+   {
+    "product": "pantry-cotton-check-napkins-set-of-2",
+    "label": "Pantry Cotton Check Napkins"
+   },
+   {
+    "product": "farmhouse-gingham-runner",
+    "label": "Gingham Runner"
+   },
+   {
+    "product": "farmers-gingham-napkins-1",
+    "label": "Gingham Napkins"
+   }
+  ]
+ }
+]
