@@ -5,7 +5,7 @@ Credentials come from env vars or pipeline/shopify/secrets.env (gitignored):
   SHOPIFY_TOKEN=shpat_xxx                   (Admin API access token)
   SHOPIFY_API_VERSION=2025-07               (optional; default below)
 """
-import os, json, ssl, time, urllib.request, urllib.error
+import os, json, ssl, time, socket, urllib.request, urllib.error
 
 ctx = ssl.create_default_context()
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -46,7 +46,7 @@ class Shopify:
             self.token = json.loads(r.read())["access_token"]
         return self.token
 
-    def _req(self, method, url, body=None, _retry=True):
+    def _req(self, method, url, body=None, _retry=True, _transient=4):
         data = json.dumps(body).encode() if body is not None else None
         req = urllib.request.Request(url, data=data, method=method, headers={
             "X-Shopify-Access-Token": self.token,
@@ -65,7 +65,16 @@ class Shopify:
                 ra = e.headers.get("Retry-After")
                 time.sleep(float(ra) if ra else 2.0)
                 return self._req(method, url, body, _retry=_retry)
+            if e.code in (500, 502, 503, 504) and _transient > 0:
+                time.sleep((5 - _transient) * 1.5)
+                return self._req(method, url, body, _retry, _transient - 1)
             raise SystemExit(f"HTTP {e.code} {method} {url}\n{e.read().decode()[:500]}")
+        except (socket.timeout, urllib.error.URLError, ConnectionError, TimeoutError) as e:
+            # transient network blip (e.g. read timeout mid-bulk-load): back off + retry
+            if _transient > 0:
+                time.sleep((5 - _transient) * 2.0)
+                return self._req(method, url, body, _retry, _transient - 1)
+            raise SystemExit(f"network error after retries: {method} {url}\n{e}")
 
     def rest(self, method, path, body=None):
         return self._req(method, f"{self.base}/{path.lstrip('/')}", body)
