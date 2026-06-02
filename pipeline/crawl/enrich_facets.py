@@ -160,8 +160,10 @@ def main():
     for c in cats:
         collections.append({"handle": "cat-"+re.sub(r"[^a-z0-9]+","-",c.lower()).strip("-"),
                             "title": c, "type": "smart", "rule": {"field":"category","value":c}})
+    ROOM_TITLES = {"dining":"The Dining Room","kitchen":"The Kitchen","bedroom":"The Bedroom",
+                   "bath":"The Bath","living":"The Living Room","entryway":"The Entryway"}
     for room in ["dining","kitchen","bedroom","bath","living","entryway"]:
-        collections.append({"handle":"room-"+room,"title":"The "+room.title()+" Room" if room not in ("dining","bath","kitchen") else {"dining":"The Dining Room","bath":"The Bath","kitchen":"The Kitchen"}[room],
+        collections.append({"handle":"room-"+room,"title":ROOM_TITLES[room],
                             "type":"smart","rule":{"field":"room","value":room}})
     # top materials as collections
     mat_counts = Counter(e["facets"]["material"] for e in enriched if e["facets"]["material"])

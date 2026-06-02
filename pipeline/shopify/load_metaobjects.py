@@ -30,7 +30,7 @@ SET_MF = """
 mutation($mfs:[MetafieldsSetInput!]!){ metafieldsSet(metafields:$mfs){ userErrors{message} } }"""
 Q_EXISTING = """
 query($t:String!,$c:String){ metaobjects(type:$t, first:100, after:$c){
-  pageInfo{hasNextPage endCursor} nodes{ id displayName } } }"""
+  pageInfo{hasNextPage endCursor} nodes{ id field(key:"name"){ value } } } }"""
 
 # ---- pure helpers (offline-testable) ----
 def content_title(src_handle):
@@ -55,10 +55,20 @@ def build_entry_fields(name, axis, gids):
         {"key": "products", "value": json.dumps(gids)},
     ]
 
+CREATE_MF_DEF = """
+mutation($d: MetafieldDefinitionInput!){
+  metafieldDefinitionCreate(definition:$d){
+    createdDefinition{ id } userErrors{ field message code } } }"""
+Q_MF_DEFS = """
+query{ metafieldDefinitions(first:100, ownerType:PRODUCT, namespace:"merch"){
+  nodes{ key } } }"""
+
 def ensure_definition(s):
-    existing = {n["type"] for n in s.gql(QDEF)["metaobjectDefinitions"]["nodes"]}
-    if DEF_TYPE in existing:
-        print(f"  definition '{DEF_TYPE}' already exists"); return
+    """Ensure the product_group metaobject definition; return its GID."""
+    nodes = s.gql(QDEF)["metaobjectDefinitions"]["nodes"]
+    for n in nodes:
+        if n["type"] == DEF_TYPE:
+            print(f"  metaobject definition '{DEF_TYPE}' already exists"); return n["id"]
     d = {
         "name": "Product Group", "type": DEF_TYPE,
         "fieldDefinitions": [
@@ -69,12 +79,31 @@ def ensure_definition(s):
     }
     res = s.gql(CREATE_DEF, {"d": d})["metaobjectDefinitionCreate"]
     if res.get("userErrors"):
-        raise SystemExit(f"definition create failed: {res['userErrors']}")
-    print(f"  created definition '{DEF_TYPE}'")
+        raise SystemExit(f"metaobject definition create failed: {res['userErrors']}")
+    print(f"  created metaobject definition '{DEF_TYPE}'")
+    return res["metaobjectDefinition"]["id"]
+
+def ensure_pg_metafield_def(s, mo_def_gid):
+    """A metaobject_reference metafield needs a PRODUCT metafield definition
+    (merch.product_group) constrained to the product_group metaobject definition,
+    or metafieldsSet rejects the value."""
+    existing = {n["key"] for n in s.gql(Q_MF_DEFS)["metafieldDefinitions"]["nodes"]}
+    if "product_group" in existing:
+        print("  metafield definition merch.product_group already exists"); return
+    d = {
+        "name": "Product Group", "namespace": "merch", "key": "product_group",
+        "ownerType": "PRODUCT", "type": "metaobject_reference",
+        "validations": [{"name": "metaobject_definition_id", "value": mo_def_gid}],
+    }
+    res = s.gql(CREATE_MF_DEF, {"d": d})["metafieldDefinitionCreate"]
+    if res.get("userErrors"):
+        raise SystemExit(f"merch.product_group metafield def create failed: {res['userErrors']}")
+    print("  created metafield definition merch.product_group")
 
 def main():
     s = Shopify()
-    ensure_definition(s)
+    mo_def_gid = ensure_definition(s)
+    ensure_pg_metafield_def(s, mo_def_gid)
 
     # store product GID map, keyed by (content) title — same approach as fbt_rekey.py
     title_to_gid, cursor = {}, None
@@ -84,27 +113,32 @@ def main():
         if not d["pageInfo"]["hasNextPage"]: break
         cursor = d["pageInfo"]["endCursor"]
 
-    # existing metaobjects (idempotency on re-run)
-    existing_names, cursor = set(), None
+    # existing metaobjects (idempotency on re-run): name-field value -> gid, so we reuse
+    # (displayName is auto-generated "Product Group #XXXX", so we must match the name field)
+    existing, cursor = {}, None
     while True:
         d = s.gql(Q_EXISTING, {"t": DEF_TYPE, "c": cursor})["metaobjects"]
-        existing_names.update(n["displayName"] for n in d["nodes"])
+        for n in d["nodes"]:
+            nm = (n.get("field") or {}).get("value")
+            if nm: existing[nm] = n["id"]
         if not d["pageInfo"]["hasNextPage"]: break
         cursor = d["pageInfo"]["endCursor"]
 
     made, set_refs = 0, 0
     for g in PG:
-        if g["name"] in existing_names:
-            print(f"  skip (exists): {g['name']}"); continue
         gids = resolve_member_gids(g["members"], title_to_gid)
         if len(gids) < 2:
             print(f"  skip (only {len(gids)} members resolved): {g['name']}"); continue
-        fields = build_entry_fields(g["name"], g.get("axis", "material/color"), gids)
-        res = s.gql(CREATE_OBJ, {"m": {"type": DEF_TYPE, "fields": fields}})["metaobjectCreate"]
-        if res.get("userErrors"):
-            print(f"  ERR {g['name']}: {res['userErrors'][:2]}"); continue
-        mo_gid = res["metaobject"]["id"]; made += 1
-        # attach to every member product
+        mo_gid = existing.get(g["name"])
+        if mo_gid:
+            print(f"  reuse metaobject: {g['name']}")
+        else:
+            fields = build_entry_fields(g["name"], g.get("axis", "material/color"), gids)
+            res = s.gql(CREATE_OBJ, {"m": {"type": DEF_TYPE, "fields": fields}})["metaobjectCreate"]
+            if res.get("userErrors"):
+                print(f"  ERR {g['name']}: {res['userErrors'][:2]}"); continue
+            mo_gid = res["metaobject"]["id"]; made += 1
+        # attach (or re-attach) to every member product — idempotent
         batch = [{"ownerId": gid, "namespace": "merch", "key": "product_group",
                   "type": "metaobject_reference", "value": mo_gid} for gid in gids]
         r = s.gql(SET_MF, {"mfs": batch})["metafieldsSet"]

@@ -20,16 +20,12 @@ def online_store_publication_id(s):
     nodes = s.gql(PUBS)["publications"]["nodes"]
     return nodes[0]["id"] if nodes else None
 
-def main():
-    s = Shopify()
-    pid = online_store_publication_id(s)
-    if not pid:
-        raise SystemExit("No publications found; is the Online Store channel installed?")
-    print(f"Online Store publication: {pid}")
-
+def publish_all(s, pid, kind):
+    """kind = 'products' or 'collections'. Both are publishable; collection pages
+    404 on the storefront until published (playbook 6b)."""
     ok, err, cursor = 0, 0, None
     while True:
-        d = s.gql('query($c:String){products(first:100,after:$c){pageInfo{hasNextPage endCursor} nodes{id title}}}', {"c": cursor})["products"]
+        d = s.gql('query($c:String){%s(first:100,after:$c){pageInfo{hasNextPage endCursor} nodes{id title}}}' % kind, {"c": cursor})[kind]
         for n in d["nodes"]:
             res = s.gql(PUBLISH, {"id": n["id"], "pid": pid})["publishablePublish"]
             if res.get("userErrors"):
@@ -37,11 +33,20 @@ def main():
                 if err <= 5: print(f"  ERR {n['title']}: {res['userErrors'][:1]}")
             else:
                 ok += 1
-                if ok % 100 == 0: print(f"  published: {ok}")
+                if ok % 100 == 0: print(f"  {kind} published: {ok}")
             time.sleep(0.3)
         if not d["pageInfo"]["hasNextPage"]: break
         cursor = d["pageInfo"]["endCursor"]
-    print(f"\npublished to Online Store: ok={ok} err={err}")
+    print(f"published {kind} to Online Store: ok={ok} err={err}")
+
+def main():
+    s = Shopify()
+    pid = online_store_publication_id(s)
+    if not pid:
+        raise SystemExit("No publications found; is the Online Store channel installed?")
+    print(f"Online Store publication: {pid}")
+    publish_all(s, pid, "products")
+    publish_all(s, pid, "collections")
 
 if __name__ == "__main__":
     main()
