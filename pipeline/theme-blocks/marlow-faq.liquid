@@ -1,0 +1,73 @@
+{%- comment -%}
+  MARLOW · FAQ accordion (PDP Kit)
+  Reads product.metafields.content.faqs (json list of {question, answer, category}).
+  Renders each as a native <details>/<summary> row. Renders nothing if absent/empty.
+  Note: schema.md lists content.faqs as a metaobject_reference list; this block
+  follows the task spec (json list). It reads .question/.answer/.category, which
+  resolve for both a json object and a metaobject reference, so it is robust to both.
+{%- endcomment -%}
+
+{%- assign s = block.settings -%}
+{%- assign faqs = product.metafields.content.faqs.value -%}
+
+{%- if faqs != blank and faqs.size > 0 -%}
+  <section class="marlow-faq" {{ block.shopify_attributes }}>
+    {%- if s.heading != blank -%}
+      <h2 class="marlow-faq__heading">{{ s.heading }}</h2>
+    {%- endif -%}
+
+    <div class="marlow-faq__list">
+      {%- for faq in faqs -%}
+        {%- if faq.question != blank and faq.answer != blank -%}
+          <details class="marlow-faq__row"{% if forloop.first and s.open_first %} open{% endif %}>
+            <summary class="marlow-faq__q">
+              <span class="marlow-faq__q-text">
+                {{ faq.question }}
+                {%- if s.show_categories and faq.category != blank -%}
+                  <span class="marlow-faq__tag">{{ faq.category }}</span>
+                {%- endif -%}
+              </span>
+              <span class="marlow-faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="marlow-faq__a">{{ faq.answer }}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .marlow-faq { margin-block: var(--margin-lg, 32px); color: var(--color-foreground, #2b2622); }
+  .marlow-faq__heading { font-size: 1.4rem; font-weight: 500; letter-spacing: 0.01em; margin: 0 0 var(--margin-sm, 14px); }
+  .marlow-faq__list { display: flex; flex-direction: column; }
+  .marlow-faq__row { border-block-end: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+  .marlow-faq__row:first-child { border-block-start: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+  .marlow-faq__q { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: var(--margin-sm, 14px); cursor: pointer; list-style: none; font-size: 0.98rem; font-weight: 500; }
+  .marlow-faq__q::-webkit-details-marker { display: none; }
+  .marlow-faq__q-text { display: inline-flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .marlow-faq__tag { font-size: 0.7rem; font-weight: 400; text-transform: lowercase; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, currentColor 8%, transparent); opacity: 0.75; }
+  .marlow-faq__icon { position: relative; flex: none; width: 12px; height: 12px; }
+  .marlow-faq__icon::before, .marlow-faq__icon::after { content: ""; position: absolute; inset-inline-start: 0; inset-block-start: 50%; width: 12px; height: 1.5px; background: currentColor; transition: transform 0.2s ease; }
+  .marlow-faq__icon::after { transform: rotate(90deg); }
+  .marlow-faq__row[open] .marlow-faq__icon::after { transform: rotate(0); }
+  .marlow-faq__a { padding-block: 0 var(--margin-md, 18px); font-size: 0.9rem; line-height: 1.65; opacity: 0.85; max-width: 60ch; }
+  .marlow-faq__a > :first-child { margin-block-start: 0; }
+  .marlow-faq__a > :last-child { margin-block-end: 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "MARLOW · FAQ",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "Product FAQ accordion. Reads the content.faqs metafield from the MARLOW data pipeline. Renders nothing when no FAQs are present." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions" },
+    { "type": "checkbox", "id": "open_first", "label": "Open first question by default", "default": false },
+    { "type": "checkbox", "id": "show_categories", "label": "Show category tags", "default": false }
+  ],
+  "presets": [
+    { "name": "MARLOW · FAQ" }
+  ]
+}
+{% endschema %}

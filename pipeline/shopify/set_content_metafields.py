@@ -2,6 +2,7 @@
 """Add per-product content metafields to already-loaded products:
   reviews.items (json, capped list of individual reviews)
   content.faqs  (json, list of {question,answer,category})
+  content.aplus (json, list of {type,heading,body}) — hero products only
 Matches store products to data by title. Run after products are loaded."""
 import json, os, time
 from client import Shopify
@@ -11,6 +12,7 @@ def load(p): return json.load(open(os.path.join(D, p)))
 CAT = load("catalog_clean.json")
 DESC = load("content/descriptions.json")
 FAQS = load("content/faqs.json")
+APLUS = load("content/aplus.json")
 REV = {r["display_title"]: r for r in load("synth/reviews.json").values()}
 
 SET = """
@@ -36,12 +38,16 @@ def main():
         if not pid: miss += 1; continue
         reviews = REV.get(p["display_title"], {}).get("reviews", [])[:10]
         faqs = FAQS.get(p["src_handle"], [])
+        aplus = APLUS.get(p["src_handle"], [])
         if reviews:
             batch.append({"ownerId": pid, "namespace": "reviews", "key": "items",
                           "type": "json", "value": json.dumps(reviews)})
         if faqs:
             batch.append({"ownerId": pid, "namespace": "content", "key": "faqs",
                           "type": "json", "value": json.dumps(faqs)})
+        if aplus:
+            batch.append({"ownerId": pid, "namespace": "content", "key": "aplus",
+                          "type": "json", "value": json.dumps(aplus)})
         ok += 1
         if len(batch) >= 24:
             r = s.gql(SET, {"mfs": batch})["metafieldsSet"]
