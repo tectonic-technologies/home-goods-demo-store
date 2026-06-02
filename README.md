@@ -40,8 +40,15 @@ python3 pipeline/crawl/content.py      # MARLOW-voice copy, FAQs, room sets, gro
 python3 verify.py
 python3 load_products.py               # idempotent; re-run to fill gaps; then publish
 python3 load_collections.py
-python3 set_content_metafields.py
+python3 set_content_metafields.py      # reviews.items + content.faqs + content.aplus
+python3 load_metaobjects.py            # product_group families -> merch.product_group
 python3 load_orders.py
+python3 fbt_rekey.py                   # rewrite merch.fbt from titles to handles
+```
+
+Validate the whole build offline before loading:
+```
+python3 pipeline/qc.py                 # data integrity + exact loader payloads (exit 1 on fail)
 ```
 
 ## Shopify connection

@@ -11,7 +11,7 @@ renders nothing when the data is absent. No fabricated content.
 | `marlow-faq.liquid` | `content.faqs` | set_content_metafields |
 | `marlow-aplus.liquid` | `content.aplus` (hero products) | set_content_metafields |
 | `marlow-fbt.liquid` | `merch.fbt` (handles) | load_products + fbt_rekey |
-| `marlow-product-groups.liquid` | `merch.product_group` metaobject, falls back to variant options | (metaobject wiring TBD) + load_products |
+| `marlow-product-groups.liquid` | `merch.product_group` metaobject, falls back to variant options | load_products + load_metaobjects |
 
 ## How to install (once the theme is connected via GitHub)
 1. Copy these files into the theme's `blocks/` directory at the repo root.
@@ -22,8 +22,10 @@ These are staged here (not in `blocks/`) because the theme is not connected yet.
 Move them to `blocks/` after the theme is installed + GitHub-synced.
 
 ## Notes
-- `merch.product_group` is currently generated as `data/content/product_groups.json`
-  (material/color families) but not yet loaded as metaobjects. The product-groups
-  block falls back to the product's own variant options until that wiring is added.
+- `merch.product_group` is loaded by `pipeline/shopify/load_metaobjects.py`, which
+  creates a `product_group` metaobject per material/color family (fields: name, axis,
+  products[list.product_reference]) and sets the reference on each member product.
+  The block supports both that `products[]` shape and a composite `members[]` shape,
+  and falls back to the product's own variant options when no group is set.
 - Styling uses theme CSS variables with sensible fallbacks, so blocks inherit the
   installed theme's palette/spacing.
