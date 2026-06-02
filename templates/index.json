@@ -54,7 +54,7 @@
         "marlow_hero_bg": {
           "type": "custom-liquid",
           "settings": {
-            "custom_liquid": "<style>.hero__media-wrapper{background-image:url('https://cdn.shopify.com/s/files/1/0750/8878/9660/files/noe_duvet_softwhite_c_sp22_3946_x_1d8cbc30-a8fd-41cd-83e1-b19867cbbd9f.jpg?v=1780410978') !important;background-size:cover !important;background-position:center !important;}.hero__media-wrapper .hero__media{opacity:0 !important;}</style>"
+            "custom_liquid": "<style>.hero .hero__media-grid{background-image:url('https://cdn.shopify.com/s/files/1/0750/8878/9660/files/noe_duvet_softwhite_c_sp22_3946_x_1d8cbc30-a8fd-41cd-83e1-b19867cbbd9f.jpg?v=1780410978') !important;background-size:cover !important;background-position:center !important;}.hero svg.hero__media{opacity:0 !important;}.hero .overlay--gradient{opacity:.35 !important;}</style>"
           },
           "blocks": {}
         }
