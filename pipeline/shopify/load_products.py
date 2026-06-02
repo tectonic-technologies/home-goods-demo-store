@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Load MAREN products into the store via GraphQL productSet:
-title, description (MAREN voice), variants/options, ~6 images (by URL),
-metafields (reviews, merch, inv, spec facets, ingredients), SEO, tags.
+"""Load MARLOW products into the store via GraphQL productSet:
+title, description (MARLOW voice), variants/options, ~6 images (by URL),
+metafields (reviews, merch, inv, spec facets), SEO, tags.
 Usage: python3 load_products.py [limit]   (no limit = all)"""
 import json, os, sys, time
 from client import Shopify
@@ -26,7 +26,7 @@ mutation($input: ProductSetInput!, $sync: Boolean) {
 def mf(ns, key, typ, val):
     if val is None or val == "" or val == []: return None
     if typ == "boolean": v = "true" if val else "false"
-    elif typ == "json": v = json.dumps(val)
+    elif typ == "json" or typ.startswith("list."): v = json.dumps(val)
     elif typ in ("number_integer",): v = str(int(val))
     elif typ in ("number_decimal",): v = str(val)
     else: v = str(val)
@@ -40,14 +40,14 @@ def build_input(p):
     inp = {
         "title": c.get("title") or dt,
         "descriptionHtml": c.get("description", ""),
-        "vendor": "MAREN",
+        "vendor": "MARLOW",
         "productType": p["category"],
         "status": "ACTIVE",
         "tags": list(filter(None, [
-            p["category"], f.get("finish"), f.get("skin_type"), f.get("price_band"),
+            p["category"], f.get("material"), f.get("room"), f.get("style"), f.get("price_band"),
             "best-seller" if m.get("best_seller") else None,
             "new" if m.get("is_new") else None,
-            "clearance" if m.get("is_clearance") else None, "MAREN",
+            "clearance" if m.get("is_clearance") else None, "MARLOW",
         ])),
         "seo": {"title": c.get("seo_title"), "description": c.get("seo_description")},
         "files": [{"originalSource": u, "contentType": "IMAGE"} for u in (e.get("images") or [])[:6]],
@@ -97,14 +97,17 @@ def build_input(p):
         mf("merch","live_viewers_base","number_integer", m.get("live_viewers_base")),
         mf("inv","tier","single_line_text_field", m.get("inv_tier")),
         mf("inv","on_hand","number_integer", m.get("on_hand")),
-        mf("spec","finish","single_line_text_field", f.get("finish")),
-        mf("spec","coverage","single_line_text_field", f.get("coverage")),
-        mf("spec","skin_type","single_line_text_field", f.get("skin_type")),
-        mf("spec","concern","json", f.get("concern")),
+        mf("spec","material","single_line_text_field", f.get("material")),
+        mf("spec","materials","list.single_line_text_field", f.get("materials")),
+        mf("spec","room","single_line_text_field", f.get("room")),
+        mf("spec","color","list.single_line_text_field", f.get("color")),
+        mf("spec","style","single_line_text_field", f.get("style")),
+        mf("spec","care","list.single_line_text_field", f.get("care")),
+        mf("spec","dimensions","single_line_text_field", e.get("dimensions")),
         mf("spec","price_band","single_line_text_field", f.get("price_band")),
-        mf("spec","has_shades","boolean", f.get("has_shades")),
-        mf("spec","shade_count","number_integer", f.get("shade_count")),
-        mf("spec","ingredients_key","json", e.get("ingredients_key")),
+        mf("spec","has_variants","boolean", f.get("has_variants")),
+        mf("spec","variant_count","number_integer", f.get("variant_count")),
+        mf("spec","primary_option","single_line_text_field", f.get("primary_option")),
     ]
     inp["metafields"] = [x for x in mfs if x]
     return inp

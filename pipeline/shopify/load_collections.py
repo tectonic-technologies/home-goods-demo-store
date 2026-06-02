@@ -17,8 +17,10 @@ mutation($input: CollectionInput!) {
 
 def rule(col):
     r = col["rule"]; field = r.get("field")
-    # map our definitions to Shopify collection rule columns
-    if col["handle"].startswith("cat-"):
+    # map our definitions to Shopify collection rule columns.
+    # products are tagged (load_products.py) with: category, material, room, style,
+    # price_band, and best-seller/new/clearance.
+    if col["handle"].startswith("cat-") or field == "category":
         return {"column": "TYPE", "relation": "EQUALS", "condition": col["title"]}
     if field == "best_seller":
         return {"column": "TAG", "relation": "EQUALS", "condition": "best-seller"}
@@ -26,12 +28,10 @@ def rule(col):
         return {"column": "TAG", "relation": "EQUALS", "condition": "new"}
     if field == "is_clearance":
         return {"column": "TAG", "relation": "EQUALS", "condition": "clearance"}
-    if field == "skin_type":
-        return {"column": "TAG", "relation": "EQUALS", "condition": r.get("value", "sensitive")}
-    if field == "concern":
-        # concern lives in a metafield, not a tag; skip rule-based for now
-        return None
+    if field in ("room", "material", "style", "price_band"):
+        return {"column": "TAG", "relation": "EQUALS", "condition": r.get("value")}
     if field == "editorial":
+        # manual/curated collection; no rule
         return None
     return None
 

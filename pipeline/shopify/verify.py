@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Once a token is set, this assesses the store with zero manual steps:
   - confirms the token works (shop info)
-  - lists themes and flags which one is GitHub-connected (the Ritual theme)
+  - lists themes and flags which one is GitHub-connected (the home theme)
   - checks whether snippets/github-sync-check.liquid is present (repo -> store sync proof)
   - summarises current catalog state (product / collection / metaobject counts)
 """
