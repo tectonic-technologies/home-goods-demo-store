@@ -124,8 +124,10 @@ def faqs(p, enr):
     if (enr or {}).get("dimensions"):
         out.append({"category":"dimensions","question":"What are the dimensions?",
                     "answer":f"Approximately {enr['dimensions']}. See the product details for the full spec."})
-    if p.get("variant_count",0) > 1 and f.get("primary_option"):
-        opt = f["primary_option"]
+    # Skip junk option names (e.g. source 'listing' axis with UUID values) — never
+    # surface internal axis names in a customer FAQ.
+    opt = (f.get("primary_option") or "").strip()
+    if p.get("variant_count",0) > 1 and opt and opt.lower() not in ("listing", "title", "default title"):
         out.append({"category":"sizing","question":f"How do I choose a {opt.lower()}?",
                     "answer":f"Browse the {opt.lower()} options above. Each is made to the same standard, so choose what suits your space."})
     return out

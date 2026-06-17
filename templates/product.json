@@ -539,7 +539,7 @@
           "settings": {
             "show_heading": true,
             "heading": "Options",
-            "fallback_to_variants": true
+            "fallback_to_variants": false
           },
           "blocks": {}
         },
