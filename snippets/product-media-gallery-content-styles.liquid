@@ -62,4 +62,14 @@
   .product-media-container--zoomable.product-media-container--image {
     cursor: zoom-in;
   }
+
+  /* MARLOW: the theme's default viewport offset (400px) constrains the PDP main
+     image too aggressively on laptops, leaving it tiny. Use a tighter offset so
+     the constrained image fills the available height while still fitting on screen. */
+  @media screen and (min-width: 750px) {
+    .product-media-container.constrain-height {
+      --viewport-offset: 170px;
+      --constrained-min-height: 520px;
+    }
+  }
 {% endstylesheet %}
