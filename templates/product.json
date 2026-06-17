@@ -316,6 +316,14 @@
                 "accordion_row_HUWbDi",
                 "accordion_row_GTWFgP"
               ]
+            },
+            "mfbt": {
+              "type": "marlow-fbt",
+              "settings": {
+                "heading": "Pairs well with",
+                "show_bulk_add": true
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -324,7 +332,8 @@
             "price_a7krng",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "accordion_Yd4U4w"
+            "accordion_Yd4U4w",
+            "mfbt"
           ]
         }
       },
@@ -559,22 +568,13 @@
             "show_categories": false
           },
           "blocks": {}
-        },
-        "mfbt": {
-          "type": "marlow-fbt",
-          "settings": {
-            "heading": "Pairs well with",
-            "show_bulk_add": true
-          },
-          "blocks": {}
         }
       },
       "block_order": [
         "mpg",
         "maplus",
         "mrev",
-        "mfaq",
-        "mfbt"
+        "mfaq"
       ],
       "name": "MARLOW \u00b7 PDP modules",
       "settings": {
