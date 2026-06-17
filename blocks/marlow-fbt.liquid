@@ -69,7 +69,7 @@
           <p class="marlow-fbt__this">This item</p>
         </li>
 
-        {%- for h in resolved_arr -%}
+        {%- for h in resolved_arr limit: 3 -%}
           {%- assign p = all_products[h] -%}
           {%- assign v = p.selected_or_first_available_variant -%}
           <li class="marlow-fbt__card">

@@ -169,7 +169,10 @@ def derive_metrics(orders):
         margin = round(min(0.85, max(0.4, random.gauss(cat_margin, 0.06))), 3)
         is_clear = random.random() < 0.08
         is_new = random.random() < 0.15
-        fbt = [CATALOG[b]["display_title"] for b, _ in cooc[i].most_common(4)]
+        # baseline co-occurrence companions; the canonical 'pairs well with' set is
+        # recomputed content-based (same room/style/price, complementary category)
+        # by pipeline/shopify/recompute_fbt.py after load — run that post-load.
+        fbt = [CATALOG[b]["display_title"] for b, _ in cooc[i].most_common(3)]
         base_price = p["_price"]
         hist = []
         for m in range(4, -1, -1):
