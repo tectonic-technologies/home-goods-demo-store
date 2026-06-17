@@ -63,13 +63,15 @@
     cursor: zoom-in;
   }
 
-  /* MARLOW: the theme's default viewport offset (400px) constrains the PDP main
-     image too aggressively on laptops, leaving it tiny. Use a tighter offset so
-     the constrained image fills the available height while still fitting on screen. */
+  /* MARLOW: guarantee the PDP main image fits entirely within the landing viewport
+     on desktop (no portion cut off below the fold). The image starts ~205px down the
+     page (sticky header + nav + section gap), so the height cap must subtract that
+     plus a bottom margin. The extra-specific selector wins over base.css, which
+     otherwise sets the offset to just the header height and lets the image overflow. */
   @media screen and (min-width: 750px) {
-    .product-media-container.constrain-height {
-      --viewport-offset: 170px;
-      --constrained-min-height: 520px;
+    media-gallery .product-media-container.constrain-height {
+      --viewport-offset: 240px;
+      --constrained-min-height: 360px;
     }
   }
 {% endstylesheet %}
