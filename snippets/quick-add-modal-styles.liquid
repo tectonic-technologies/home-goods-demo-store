@@ -593,4 +593,30 @@
       transform: translateY(0);
     }
   }
+
+  /* Variant dropdown caret: keep it small + positioned inside the select even
+     when the PDP variant-picker stylesheet isn't bundled on home/PLP. Without
+     this the unsized SVG falls back to the browser default (300x150) and renders
+     as a giant chevron between the option dropdowns. Scoped to the variant
+     wrapper so other modal icons (close, etc.) are untouched. */
+  .quick-add-modal .variant-option__select-wrapper {
+    position: relative;
+  }
+
+  .quick-add-modal .variant-option__select-wrapper .icon,
+  .quick-add-modal .variant-option__select-wrapper .icon-caret {
+    position: absolute;
+    right: var(--padding-md, 0.75rem);
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--icon-size-2xs, 0.6rem);
+    height: var(--icon-size-2xs, 0.6rem);
+    pointer-events: none;
+  }
+
+  /* Safety net: no caret can balloon in the modal regardless of cascade. */
+  .quick-add-modal .variant-option__select-wrapper svg {
+    max-width: 1.5rem;
+    max-height: 1.5rem;
+  }
 {% endstylesheet %}
